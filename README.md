@@ -6,6 +6,10 @@ Press **H** to start a session. Music plays through the focus phase and **pauses
 
 It is also a visualizer: a full-width countdown clock instead of the spectrum.
 
+![The countdown clock](docs/clock-blue.png)
+
+The digits are drawn from curves at whatever size the panel gives them, two pixels per character cell, with a progress line underneath: bright for elapsed, dim for what is left.
+
 ## Install
 
 ```sh
@@ -46,9 +50,20 @@ long_break_minutes       = 15
 rounds_before_long_break = 4
 adjust_minutes           = 1     # step for ( and )
 cell_aspect              = 2.0   # your terminal's cell height ÷ width
+color                    = "#7aa2f7"  # clock colour; omit for plain greys
 ```
 
 `cell_aspect` keeps the clock's digits from looking stretched. 2.0 suits most terminals; raise it for a narrow font or extra line spacing.
+
+## Colour
+
+cliamp does not tell plugins which theme is active, so the clock is drawn in plain greys by default — they suit any background. Set `color` to your theme's accent and it matches:
+
+| `color = "#7aa2f7"` | `color = "#fabd2f"` | unset |
+|---|---|---|
+| ![blue](docs/clock-blue.png) | ![amber](docs/clock-amber.png) | ![plain](docs/clock-plain.png) |
+
+The colour carries through the anti-aliased edges and the progress line, so the whole clock reads as one piece.
 
 ## The clock
 
