@@ -19,12 +19,11 @@
 --   long_break_minutes = 15
 --   rounds_before_long_break = 4
 --   adjust_minutes = 1           -- how much ( and ) change the running phase
---   color = "#7aa2f7"            -- clock colour; omit for the terminal's own
 
 local p = plugin.register({
     name        = "pomodoro",
     type        = "visualizer",
-    version     = "1.1.0",
+    version     = "1.0.0",
     description = "Focus timer that pauses playback on breaks",
     permissions = {"control", "keymap"},
 })
@@ -328,34 +327,6 @@ end
 --
 -- The shading blends towards black, which suits a dark terminal. Set
 -- antialias = false in config for plain on/off pixels instead.
--- CLOCK_RGB tints the digits. cliamp's plugin API does not expose the active
--- theme, so the colour cannot follow a theme change by itself; set it to your
--- theme's accent and it matches. Unset, the clock is drawn in plain greys,
--- which suits any background.
-local CLOCK_RGB = (function()
-    local hex = tostring(p:config("color") or ""):gsub("^#", "")
-    if #hex ~= 6 then return nil end
-    local r, g, b = hex:match("^(%x%x)(%x%x)(%x%x)$")
-    if not r then
-        cliamp.log.warn("pomodoro: color = " .. hex .. " is not a hex colour like #7aa2f7")
-        return nil
-    end
-    return { tonumber(r, 16) / 255, tonumber(g, 16) / 255, tonumber(b, 16) / 255 }
-end)()
-
--- rgbFor turns a coverage value (0..1) into the colour that pixel is drawn
--- in: a grey without a configured colour, and the colour scaled by coverage
--- with one, so anti-aliased edges keep their softness.
-local function rgbFor(cov)
-    if not CLOCK_RGB then
-        local v = math.floor(cov * 255 + 0.5)
-        return v, v, v
-    end
-    return math.floor(cov * CLOCK_RGB[1] * 255 + 0.5),
-        math.floor(cov * CLOCK_RGB[2] * 255 + 0.5),
-        math.floor(cov * CLOCK_RGB[3] * 255 + 0.5)
-end
-
 local function packHalfBlocks(canvas, w, h)
     local rows = {}
     for y = 1, h, 2 do
@@ -364,8 +335,8 @@ local function packHalfBlocks(canvas, w, h)
         local curFG, curBG = nil, nil   -- curBG == "d" means terminal default
 
         local function shade(c)
-            local r, g, b = rgbFor(c)
-            return "\27[38;2;" .. r .. ";" .. g .. ";" .. b .. "m", r .. "," .. g .. "," .. b
+            local v = math.floor(c * 255 + 0.5)
+            return "\27[38;2;" .. v .. ";" .. v .. ";" .. v .. "m", v
         end
 
         for x = 1, w do
@@ -400,12 +371,11 @@ local function packHalfBlocks(canvas, w, h)
                 end
 
                 if ct > 0 and cb > 0 then
-                    local br, bg, bb = rgbFor(cb)
-                    local bgKey = br .. "," .. bg .. "," .. bb
-                    if curBG ~= bgKey then
+                    local bgv = math.floor(cb * 255 + 0.5)
+                    if curBG ~= bgv then
                         n = n + 1
-                        parts[n] = "\27[48;2;" .. br .. ";" .. bg .. ";" .. bb .. "m"
-                        curBG = bgKey
+                        parts[n] = "\27[48;2;" .. bgv .. ";" .. bgv .. ";" .. bgv .. "m"
+                        curBG = bgv
                     end
                 elseif curBG ~= "d" then
                     n = n + 1; parts[n] = "\27[49m"
@@ -437,15 +407,8 @@ local function progressLine(fraction, cells, width)
     local filled = floor(fraction * cells + 0.5)
     if filled < 0 then filled = 0 end
     if filled > cells then filled = cells end
-    -- The elapsed part carries the clock's colour; the rest stays dim, so the
-    -- line reads as one object with the digits above it.
-    local tint = ""
-    if CLOCK_RGB then
-        local r, g, b = rgbFor(1)
-        tint = "\27[38;2;" .. r .. ";" .. g .. ";" .. b .. "m"
-    end
-    return padTo(tint .. string.rep("━", filled) .. "\27[0m"
-        .. "\27[2m" .. string.rep("─", cells - filled) .. "\27[22m", cells, width)
+    return padTo(string.rep("━", filled) ..
+        "\27[2m" .. string.rep("─", cells - filled) .. "\27[22m", cells, width)
 end
 
 -- faceWidth returns the exact cell width renderFace will produce for text at
