@@ -2,7 +2,7 @@
 
 A focus timer for [cliamp](https://github.com/bjarneo/cliamp), for working to music.
 
-Press **H** to start a session. Music plays through the focus phase and **pauses during breaks**, so the silence is what tells you to stop — no timer to watch. After four rounds the break is a long one.
+Press **H** to start a session. Music plays through the focus phase and **pauses during breaks**, so the silence is what tells you to stop, no timer to watch. After four rounds the break is a long one.
 
 It is also a visualizer: a full-width countdown clock instead of the spectrum.
 

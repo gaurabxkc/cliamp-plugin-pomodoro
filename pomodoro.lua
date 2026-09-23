@@ -1,4 +1,4 @@
--- pomodoro.lua — Focus sessions that pause the music on breaks, with a big
+-- pomodoro.lua: focus sessions that pause the music on breaks, with a big
 -- countdown that replaces the visualizer.
 --
 -- Press H to start or stop a session, ( and ) to take time off or add time to
@@ -113,7 +113,7 @@ start_break = function()
 
     local label = long and "Long break" or "Break"
     cliamp.message(string.format("%s %g min", label, minutes))
-    cliamp.notify("Pomodoro", string.format("%s — %g minutes", label, minutes))
+    cliamp.notify("Pomodoro", string.format("%s, %g minutes", label, minutes))
 
     stop_timer()
     timer = cliamp.timer.after(minutes * 60, phase_done)
