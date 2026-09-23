@@ -2,7 +2,7 @@
 
 A focus timer for [cliamp](https://github.com/bjarneo/cliamp), for working to music.
 
-Press **H** to start a session. Music plays through the focus phase and **pauses during breaks**, so the silence is what tells you to stop, no timer to watch. After four rounds the break is a long one.
+Press **Ctrl+O** to start a session. Music plays through the focus phase and **pauses during breaks**, so the silence is what tells you to stop, no timer to watch. After four rounds the break is a long one.
 
 It is also a visualizer: a full-width countdown clock instead of the spectrum.
 
@@ -12,13 +12,13 @@ It is also a visualizer: a full-width countdown clock instead of the spectrum.
 cliamp plugins install gaurabxkc/cliamp-plugin-pomodoro
 ```
 
-Restart cliamp and press **H**.
+Restart cliamp and press **Ctrl+O**.
 
 ## Keys
 
 | Key | Action |
 |---|---|
-| `H` | Start or stop a session |
+| `Ctrl+O` | Start or stop a session |
 | `)` | Add a minute to the running phase |
 | `(` | Take a minute off (never below one minute) |
 | `v` / `Ctrl+V` | Switch the visualizer to `pomodoro` for the countdown clock |
@@ -58,7 +58,7 @@ If you pause the music yourself during a break, the plugin leaves it paused: it 
 
 ## Requirements
 
-cliamp with [#525](https://github.com/bjarneo/cliamp/pull/525) (uppercase plugin keys) for `H`. Until that is released, start sessions with `cliamp plugins call pomodoro start`.
+None beyond cliamp itself. Sessions can also be driven from a shell with `cliamp plugins call pomodoro start`, which is handy from a status bar or a script.
 
 ## License
 

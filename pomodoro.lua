@@ -1,7 +1,7 @@
 -- pomodoro.lua: focus sessions that pause the music on breaks, with a big
 -- countdown that replaces the visualizer.
 --
--- Press H to start or stop a session, ( and ) to take time off or add time to
+-- Press Ctrl+O to start or stop a session, ( and ) to take time off or add time to
 -- the running phase. Music plays through the work phase and
 -- pauses for breaks, so the silence marks the break rather than a timer you
 -- have to watch. Press v (or Ctrl+V) to switch the visualizer to "pomodoro"
@@ -563,7 +563,10 @@ local function bind(key, label, fn)
     end
 end
 
-bind("H", "Pomodoro", function()
+-- Ctrl+O, not H: cliamp reserves uppercase letters for providers (upstream
+-- #547), and a lowercase "h" is a core key, so a letter binding is refused
+-- either way. Ctrl+O is unclaimed by the core.
+bind("ctrl+o", "Pomodoro", function()
     if phase then stop_session(false) else start_work() end
 end)
 bind(")", "Pomodoro +" .. ADJUST .. "m", function() adjust(ADJUST) end)
